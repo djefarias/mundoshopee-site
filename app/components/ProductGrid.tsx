@@ -5,17 +5,18 @@ import { useEffect, useState } from 'react';
 import ProductCard from './ProductCard';
 
 interface Product {
-  itemid: number;
-  shopid: number;
-  title: string;
-  image: string;
+  id: string;
+  name: string;
   price: number;
-  original_price?: number;
-  discount?: string;
-  rating?: number;
-  sold?: number;
-  commission_rate?: string;
-  affiliate_link: string;
+  commission: number;
+  commissionRate: number;
+  rating: number;
+  shopName: string;
+  image: string;
+  productLink: string;
+  affiliateLink: string;
+  shopId: number;
+  itemId: number;
 }
 
 export default function ProductGrid() {
@@ -34,7 +35,8 @@ export default function ProductGrid() {
         }
         
         const data = await response.json();
-        setProducts(data);
+        // O JSON tem a estrutura: { lastUpdate, totalProducts, filters, products: [...] }
+        setProducts(data.products || []);
         setError(null);
       } catch (err) {
         setError('Erro ao carregar ofertas. Tente novamente mais tarde.');
@@ -90,7 +92,7 @@ export default function ProductGrid() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {products.map((product) => (
-        <ProductCard key={`${product.shopid}-${product.itemid}`} product={product} />
+        <ProductCard key={`${product.shopId}-${product.itemId}`} product={product} />
       ))}
     </div>
   );
