@@ -1,0 +1,24 @@
+========================================
+   INSTRUÇÕES PARA PUSH NO GITHUB
+========================================
+
+1. Crie o repositório no GitHub:
+   https://github.com/new
+   
+   Nome: mundoshopee-site
+   Descrição: Site de afiliados da Shopee - As melhores ofertas da Shopee, todo dia!
+   Público: ✅ SIM
+   Initialize with README: ❌ NÃO
+
+2. Execute estes comandos:
+
+cd /home/ubuntu/code_artifacts/mundoshopee-site
+git push -u origin main
+
+========================================
+
+✅ O repositório já está inicializado
+✅ O commit inicial já foi feito
+✅ O remote origin já está configurado
+
+Você só precisa criar o repo no GitHub e executar o push!

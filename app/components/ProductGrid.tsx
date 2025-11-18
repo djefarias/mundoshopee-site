@@ -35,8 +35,8 @@ export default function ProductGrid() {
         }
         
         const data = await response.json();
-        // Limitar a 12 produtos
-        const limitedProducts = (data.products || []).slice(0, 12);
+        // Limitar a 20 produtos
+        const limitedProducts = (data.products || []).slice(0, 20);
         setProducts(limitedProducts);
         setError(null);
       } catch (err) {
@@ -91,7 +91,7 @@ export default function ProductGrid() {
   }
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-2">
       {products.map((product) => (
         <ProductCard key={`${product.shopId}-${product.itemId}`} product={product} />
       ))}
