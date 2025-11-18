@@ -1,0 +1,20 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --shopee-orange: #EE4D2D;
+  --shopee-orange-dark: #D73211;
+  --shopee-bg: #F5F5F5;
+}
+
+body {
+  background-color: var(--shopee-bg);
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
