@@ -6,11 +6,11 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Ofertas do Djé - As melhores ofertas da Shopee",
+  title: "Mundo Shopee - As melhores ofertas da Shopee",
   description: "Descubra ofertas selecionadas da Shopee com os melhores preços e descontos incríveis!",
   keywords: "shopee, ofertas, promoções, descontos, compras online",
   openGraph: {
-    title: "Ofertas do Djé - As melhores ofertas da Shopee",
+    title: "Mundo Shopee - As melhores ofertas da Shopee",
     description: "Descubra ofertas selecionadas da Shopee com os melhores preços e descontos incríveis!",
     type: "website",
   },

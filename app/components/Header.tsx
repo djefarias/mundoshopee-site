@@ -5,7 +5,7 @@ export default function Header() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-center">
           <h1 className="text-2xl md:text-3xl font-semibold text-gray-900 tracking-tight">
-            Ofertas do Djé
+            Mundo Shopee
           </h1>
         </div>
       </div>

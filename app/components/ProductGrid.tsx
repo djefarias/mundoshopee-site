@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import ProductCard from './ProductCard';
 
 interface Product {
   id: string;
   name: string;
   price: number;
+  original_price?: number;
   commission: number;
   commissionRate: number;
   rating: number;
@@ -19,10 +20,14 @@ interface Product {
   videoLink?: string;
 }
 
+const PRODUCTS_PER_PAGE = 20;
+
 export default function ProductGrid() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -35,9 +40,7 @@ export default function ProductGrid() {
         }
         
         const data = await response.json();
-        // Limitar a 20 produtos
-        const limitedProducts = (data.products || []).slice(0, 20);
-        setProducts(limitedProducts);
+        setAllProducts(data.products || []);
         setError(null);
       } catch (err) {
         setError('Erro ao carregar ofertas. Tente novamente mais tarde.');
@@ -49,6 +52,33 @@ export default function ProductGrid() {
 
     fetchProducts();
   }, []);
+
+  // Calcular produtos da página atual
+  const totalPages = Math.ceil(allProducts.length / PRODUCTS_PER_PAGE);
+  const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
+  const endIndex = startIndex + PRODUCTS_PER_PAGE;
+  const currentProducts = allProducts.slice(startIndex, endIndex);
+
+  // Função para mudar de página
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    // Scroll para o topo do grid
+    if (gridRef.current) {
+      gridRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      goToPage(currentPage - 1);
+    }
+  };
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      goToPage(currentPage + 1);
+    }
+  };
 
   if (loading) {
     return (
@@ -79,7 +109,7 @@ export default function ProductGrid() {
     );
   }
 
-  if (products.length === 0) {
+  if (allProducts.length === 0) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
         <div className="text-center">
@@ -91,10 +121,49 @@ export default function ProductGrid() {
   }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-2">
-      {products.map((product) => (
-        <ProductCard key={`${product.shopId}-${product.itemId}`} product={product} />
-      ))}
+    <div ref={gridRef}>
+      {/* Grid de Produtos - 5 colunas no desktop */}
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 min-[968px]:grid-cols-5 gap-2 max-w-7xl mx-auto">
+        {currentProducts.map((product) => (
+          <ProductCard key={`${product.shopId}-${product.itemId}`} product={product} />
+        ))}
+      </div>
+
+      {/* Paginação */}
+      {totalPages > 1 && (
+        <div className="mt-8 flex items-center justify-center gap-4">
+          {/* Botão Anterior */}
+          <button
+            onClick={goToPreviousPage}
+            disabled={currentPage === 1}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              currentPage === 1
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                : 'bg-gray-900 text-white hover:bg-gray-800'
+            }`}
+          >
+            ← Anterior
+          </button>
+
+          {/* Indicador de Página */}
+          <div className="text-sm text-gray-600">
+            Página <span className="font-bold text-gray-900">{currentPage}</span> de <span className="font-bold text-gray-900">{totalPages}</span>
+          </div>
+
+          {/* Botão Próxima */}
+          <button
+            onClick={goToNextPage}
+            disabled={currentPage === totalPages}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              currentPage === totalPages
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                : 'bg-gray-900 text-white hover:bg-gray-800'
+            }`}
+          >
+            Próxima →
+          </button>
+        </div>
+      )}
     </div>
   );
 }
