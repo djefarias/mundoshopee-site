@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -17,6 +16,7 @@ interface Product {
   affiliateLink: string;
   shopId: number;
   itemId: number;
+  videoLink?: string;
 }
 
 export default function ProductGrid() {
@@ -35,8 +35,9 @@ export default function ProductGrid() {
         }
         
         const data = await response.json();
-        // O JSON tem a estrutura: { lastUpdate, totalProducts, filters, products: [...] }
-        setProducts(data.products || []);
+        // Limitar a 12 produtos
+        const limitedProducts = (data.products || []).slice(0, 12);
+        setProducts(limitedProducts);
         setError(null);
       } catch (err) {
         setError('Erro ao carregar ofertas. Tente novamente mais tarde.');
@@ -53,8 +54,8 @@ export default function ProductGrid() {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-[#EE4D2D] border-t-transparent"></div>
-          <p className="mt-4 text-gray-600">Carregando ofertas incríveis...</p>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-300 border-t-gray-900"></div>
+          <p className="mt-4 text-gray-600">Carregando ofertas...</p>
         </div>
       </div>
     );
@@ -63,13 +64,13 @@ export default function ProductGrid() {
   if (error) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
-        <div className="text-center bg-red-50 border border-red-200 rounded-lg p-8 max-w-md">
-          <div className="text-red-500 text-5xl mb-4">⚠️</div>
-          <h3 className="text-xl font-semibold text-red-800 mb-2">Oops!</h3>
-          <p className="text-red-600">{error}</p>
+        <div className="text-center bg-gray-50 border border-gray-200 rounded-2xl p-8 max-w-md">
+          <div className="text-gray-400 text-5xl mb-4">⚠️</div>
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">Oops!</h3>
+          <p className="text-gray-600">{error}</p>
           <button 
             onClick={() => window.location.reload()} 
-            className="mt-4 bg-[#EE4D2D] text-white px-6 py-2 rounded-lg hover:bg-[#D73211] transition-colors"
+            className="mt-4 bg-gray-900 text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors"
           >
             Tentar Novamente
           </button>
@@ -90,7 +91,7 @@ export default function ProductGrid() {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
       {products.map((product) => (
         <ProductCard key={`${product.shopId}-${product.itemId}`} product={product} />
       ))}

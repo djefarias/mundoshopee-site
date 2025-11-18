@@ -1,4 +1,3 @@
-
 "use client";
 
 import Image from 'next/image';
@@ -17,6 +16,7 @@ interface ProductCardProps {
     affiliateLink: string;
     shopId: number;
     itemId: number;
+    videoLink?: string;
   };
 }
 
@@ -28,70 +28,50 @@ export default function ProductCard({ product }: ProductCardProps) {
     });
   };
 
-  const renderStars = (rating?: number) => {
-    if (!rating) return null;
-    const stars = Math.round(rating);
-    return (
-      <div className="flex items-center gap-1">
-        {[...Array(5)].map((_, i) => (
-          <span key={i} className={i < stars ? "text-yellow-400" : "text-gray-300"}>
-            ★
-          </span>
-        ))}
-        <span className="text-sm text-gray-600 ml-1">({rating.toFixed(1)})</span>
-      </div>
-    );
-  };
-
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col">
-      <div className="relative aspect-square bg-gray-100">
+    <a
+      href={product.affiliateLink}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block bg-white rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 hover:scale-[1.02] group"
+    >
+      {/* Imagem Quadrada */}
+      <div className="relative aspect-square bg-gray-50">
         <Image
           src={product.image}
           alt={product.name}
           fill
           className="object-cover"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
         />
-        {product.commissionRate && (
-          <div className="absolute top-2 left-2 bg-green-500 text-white px-2 py-1 rounded-md text-xs font-semibold">
-            💰 {(product.commissionRate * 100).toFixed(0)}% comissão
+        
+        {/* Ícone de Play se tiver vídeo */}
+        {product.videoLink && (
+          <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm rounded-full w-8 h-8 flex items-center justify-center">
+            <span className="text-white text-xs">▶️</span>
           </div>
         )}
       </div>
       
-      <div className="p-4 flex flex-col flex-grow">
+      {/* Informações do Produto */}
+      <div className="p-4">
+        {/* Nome do Produto - Máximo 2 linhas */}
         <h3 className="text-sm font-medium text-gray-800 line-clamp-2 mb-2 min-h-[40px]">
           {product.name}
         </h3>
         
-        <div className="text-xs text-gray-500 mb-2">
-          🏪 {product.shopName}
+        {/* Preço em Destaque */}
+        <div className="mb-3">
+          <span className="text-lg font-bold text-gray-900">
+            {formatPrice(product.price)}
+          </span>
         </div>
         
-        {renderStars(product.rating)}
-        
-        <div className="mt-auto pt-3">
-          <div className="flex items-baseline gap-2 mb-1">
-            <span className="text-2xl font-bold text-[#EE4D2D]">
-              {formatPrice(product.price)}
-            </span>
-          </div>
-          
-          <div className="text-xs text-green-600 font-medium mb-3">
-            Ganhe {formatPrice(product.commission)} de comissão
-          </div>
-          
-          <a
-            href={product.affiliateLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block w-full bg-[#EE4D2D] hover:bg-[#D73211] text-white text-center font-semibold py-2.5 rounded-lg transition-colors duration-200"
-          >
-            Ver Oferta 🛒
-          </a>
+        {/* Botão Discreto */}
+        <div className="text-xs text-gray-500 group-hover:text-gray-700 transition-colors">
+          Ver na Shopee →
         </div>
       </div>
-    </div>
+    </a>
   );
 }
